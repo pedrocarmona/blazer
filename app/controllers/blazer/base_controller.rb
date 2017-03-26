@@ -51,6 +51,9 @@ module Blazer
                 value = value.to_i
               elsif value =~ /\A\d+\.\d+\z/
                 value = value.to_f
+              elsif value =~ /\A`[a-zA-Z_][a-zA-Z0-9_]*`(,`[a-zA-Z_][a-zA-Z0-9_]*`)*\z/
+                statement.gsub!("{#{var}}", value)
+                next
               end
             end
             statement.gsub!("{#{var}}", ActiveRecord::Base.connection.quote(value))
