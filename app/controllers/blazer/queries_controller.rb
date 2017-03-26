@@ -60,14 +60,13 @@ module Blazer
 
       @smart_vars = {}
       @sql_errors = []
-      data_source = Blazer.data_sources[@query.data_source]
+      @data_source = Blazer.data_sources[@query.data_source]
       @bind_vars.each do |var|
-        smart_var, error = parse_smart_variables(var, data_source)
+        smart_var = smart_variable_data_source(var, @data_source)
         @smart_vars[var] = smart_var if smart_var
-        @sql_errors << error if error
       end
 
-      Blazer.transform_statement.call(data_source, @statement) if Blazer.transform_statement
+      Blazer.transform_statement.call(@data_source, @statement) if Blazer.transform_statement
     end
 
     def edit

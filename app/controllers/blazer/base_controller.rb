@@ -59,9 +59,7 @@ module Blazer
       end
 
       def parse_smart_variables(var, data_source)
-        smart_var_data_source =
-          ([data_source] + Array(data_source.settings["inherit_smart_settings"]).map { |ds| Blazer.data_sources[ds] }).find { |ds| ds.smart_variables[var] }
-
+        smart_var_data_source = smart_variable_data_source(var, data_source)
         if smart_var_data_source
           query = smart_var_data_source.smart_variables[var]
 
@@ -78,6 +76,11 @@ module Blazer
 
         [smart_var, error]
       end
+
+      def smart_variable_data_source(var, data_source)
+        ([data_source] + Array(data_source.settings["inherit_smart_settings"]).map { |ds| Blazer.data_sources[ds] }).find { |ds| ds.smart_variables[var] }
+      end
+
 
       def extract_vars(statement)
         # strip commented out lines
