@@ -58,15 +58,15 @@ module Blazer
       @statement = @query.statement.dup
       process_vars(@statement, @query.data_source)
 
-      @smart_vars = {}
+      @smart_vars_paths = {}
       @sql_errors = []
-      @data_source = Blazer.data_sources[@query.data_source]
+      data_source = Blazer.data_sources[@query.data_source]
       @bind_vars.each do |var|
-        smart_var = smart_variable_data_source(var, @data_source)
-        @smart_vars[var] = smart_var if smart_var
+        smart_var = smart_variable_data_source(var, data_source)
+        @smart_vars_paths[var] = data_source_smart_variable_path(data_source.id, var) if smart_var && @smart_vars_paths[var].nil?
       end
 
-      Blazer.transform_statement.call(@data_source, @statement) if Blazer.transform_statement
+      Blazer.transform_statement.call(data_source, @statement) if Blazer.transform_statement
     end
 
     def edit

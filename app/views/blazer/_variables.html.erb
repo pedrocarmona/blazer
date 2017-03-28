@@ -10,7 +10,7 @@
     <% @bind_vars.each_with_index do |var, i| %>
       <div class="form-group">
       <%= label_tag var, var %>
-        <% if (data = @smart_vars[var]) %>
+        <% if @smart_vars_paths[var] %>
           <%= select_tag var %>
           <script>
             $("#<%= var %>").selectize({
@@ -27,7 +27,7 @@
               load: function(query, callback) {
                 this.settings.load = null; // remove auto-loading
                 return $.ajax({
-                  url: "<%= data_source_smart_variable_path(@data_source.id, var) %>",
+                  url: "<%= @smart_vars_paths[var] %>",
                   type: 'GET',
                   error: function() { callback(); },
                   success: function(res) { callback(res); }

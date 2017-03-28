@@ -29,15 +29,12 @@ module Blazer
         process_vars(query.statement, query.data_source)
       end
       @bind_vars ||= []
-
-      @smart_vars = {}
-      @sql_errors = []
+      @smart_vars_paths = {}
       @data_sources = @queries.map { |q| Blazer.data_sources[q.data_source] }.uniq
       @bind_vars.each do |var|
         @data_sources.each do |data_source|
-          smart_var, error = parse_smart_variables(var, data_source)
-          ((@smart_vars[var] ||= []).concat(smart_var)).uniq! if smart_var
-          @sql_errors << error if error
+          smart_var = smart_variable_data_source(var, data_source)
+          @smart_vars_paths[var] = data_source_smart_variable_path(data_source.id, var) if smart_var && @smart_vars_paths[var].nil?
         end
       end
     end
