@@ -33,8 +33,8 @@ module Blazer
 
         if @success
           @bind_vars.each do |var|
-            value = params[var].presence
-            if value
+            values = Array(params[var].presence)
+            values.each_with_index do |value, ind|
               if ["start_time", "end_time"].include?(var)
                 value = value.to_s.gsub(" ", "+") # fix for Quip bug
               end
@@ -51,12 +51,17 @@ module Blazer
                 value = value.to_i
               elsif value =~ /\A\d+\.\d+\z/
                 value = value.to_f
-              elsif value =~ /\A`[a-zA-Z_][a-zA-Z0-9_]*`(,`[a-zA-Z_][a-zA-Z0-9_]*`)*\z/
+              end
+
+              unless value =~ /\A`[a-zA-Z_][a-zA-Z0-9_]*`\z/
+                value = ActiveRecord::Base.connection.quote(value)
+              end
+              if values.size - 1 == ind
                 statement.gsub!("{#{var}}", value)
-                next
+              else
+                statement.gsub!("{#{var}}", "#{value}, {#{var}}")
               end
             end
-            statement.gsub!("{#{var}}", ActiveRecord::Base.connection.quote(value))
           end
         end
       end

@@ -11,7 +11,7 @@
       <div class="form-group">
       <%= label_tag var, var %>
         <% if @smart_vars_paths[var] %>
-          <%= select_tag var %>
+          <%= select_tag var,  "".html_safe, multiple: true, include_blank: true %>
           <script>
             $("#<%= var %>").selectize({
               create: true,
@@ -20,8 +20,9 @@
               searchField: ['id', 'name'],
               allowEmptyOption: true,
               preload: true,
+              plugins: ['remove_button'],
               onLoad: function(data) {
-                var items = <%= params[var].blank? ? [] : Array(params[var]).to_s.html_safe %>
+                var items = <%= Array(params[var]).to_s.html_safe %>;
                 this.setValue(items);
               },
               load: function(query, callback) {

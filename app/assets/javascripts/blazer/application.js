@@ -23,9 +23,9 @@ $(document).on('mouseenter', '.dropdown-toggle', function () {
   $(this).parent().addClass('open')
 })
 
-$(document).on("change", "#bind input, #bind select", function () {
-  submitIfCompleted($(this).closest("form"))
-})
+//$(document).on("change", "#bind input, #bind select", function () {
+//  submitIfCompleted($(this).closest("form"))
+//})
 
 $(document).on("click", "#code", function () {
   $(this).addClass("expanded")
