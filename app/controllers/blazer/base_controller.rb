@@ -33,8 +33,9 @@ module Blazer
 
         if @success
           @bind_vars.each do |var|
-            values = Array(params[var].presence)
+            values = Array(params[var])
             values.each_with_index do |value, ind|
+              value = value.presence
               if ["start_time", "end_time"].include?(var)
                 value = value.to_s.gsub(" ", "+") # fix for Quip bug
               end
